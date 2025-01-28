@@ -3,9 +3,17 @@ import db from '../config/connection.js';
 
 export default async (modelName: "Question", collectionName: string) => {
   try {
-    let modelExists = await models[modelName].db.db.listCollections({
+    // Type checking for models
+    if (!models[modelName]) {
+      throw new Error(`Model ${modelName} not found`);
+    }
+
+    // Add type assertion to handle possible undefined
+    const model = models[modelName]!;
+    
+    let modelExists = await model.db.db.listCollections({
       name: collectionName
-    }).toArray()
+    }).toArray();
 
     if (modelExists.length) {
       await db.dropCollection(collectionName);
