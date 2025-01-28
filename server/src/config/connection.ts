@@ -3,25 +3,20 @@ dotenv.config();
 
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/techquiz';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/Waleed';
 
-// Add connection options to handle the retryWrites error
-mongoose.connect(MONGODB_URI, {
-  retryWrites: true,
-  w: "majority"
-}).catch(error => {
-  console.error('Error connecting to MongoDB:', error);
-});
+try {
+  mongoose.connect(MONGODB_URI)
+    .then(() => console.log('Connected to MongoDB successfully'))
+    .catch(err => console.error('MongoDB connection error:', err));
+} catch (error) {
+  console.error('Error in MongoDB connection setup:', error);
+}
 
 const db = mongoose.connection;
 
-// Add error handling
 db.on('error', (error) => {
   console.error('MongoDB connection error:', error);
-});
-
-db.once('open', () => {
-  console.log('Connected to MongoDB successfully');
 });
 
 export default db;
